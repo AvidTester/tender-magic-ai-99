@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Tenders from "./pages/Tenders";
+import TenderDetail from "./pages/TenderDetail";
 import CreateTender from "./pages/CreateTender";
 import Submissions from "./pages/Submissions";
 import Vendors from "./pages/Vendors";
@@ -24,6 +26,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/tenders" element={<Tenders />} />
+          <Route path="/tender/:tenderId" element={<TenderDetail />} />
           <Route path="/create-tender" element={<CreateTender />} />
           <Route path="/submissions" element={<Submissions />} />
           <Route path="/vendors" element={<Vendors />} />

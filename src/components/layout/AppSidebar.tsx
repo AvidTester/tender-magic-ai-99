@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -13,24 +13,15 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { Home, FilePlus, Send, Users, Award, FileCheck, Settings, HelpCircle, LogOut } from 'lucide-react';
+import { Home, FilePlus, Send, Users, Award, FileCheck, Settings, HelpCircle, LogOut, FileText, ChevronDown, ChevronRight } from 'lucide-react';
 
 export function AppSidebar() {
   const location = useLocation();
+  const [tenderSubmenuOpen, setTenderSubmenuOpen] = useState(true);
 
-  const mainMenuItems = [
-    { title: 'Dashboard', icon: Home, path: '/' },
-    { title: 'Create Tender', icon: FilePlus, path: '/create-tender' },
-    { title: 'Submissions', icon: Send, path: '/submissions' },
-    { title: 'Vendors', icon: Users, path: '/vendors' },
-    { title: 'Evaluations', icon: Award, path: '/evaluations' },
-    { title: 'Reports', icon: FileCheck, path: '/reports' },
-  ];
-
-  const utilityMenuItems = [
-    { title: 'Settings', icon: Settings, path: '/settings' },
-    { title: 'Help', icon: HelpCircle, path: '/help' },
-  ];
+  const toggleTenderSubmenu = () => {
+    setTenderSubmenuOpen(!tenderSubmenuOpen);
+  };
 
   return (
     <Sidebar>
@@ -45,22 +36,99 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+          <SidebarGroupLabel>Procurement</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainMenuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={location.pathname === item.path}
-                  >
-                    <Link to={item.path}>
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/'}
+                >
+                  <Link to="/">
+                    <Home className="h-5 w-5" />
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Tenders with submenu */}
+              <SidebarMenuItem>
+                <div 
+                  className="flex items-center w-full px-3 py-2 rounded-md text-sidebar-foreground cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  onClick={toggleTenderSubmenu}
+                >
+                  <FileText className="h-5 w-5 mr-2" />
+                  <span className="flex-1">Tenders</span>
+                  {tenderSubmenuOpen ? 
+                    <ChevronDown className="h-4 w-4" /> : 
+                    <ChevronRight className="h-4 w-4" />
+                  }
+                </div>
+              </SidebarMenuItem>
+
+              {tenderSubmenuOpen && (
+                <>
+                  <SidebarMenuItem className="pl-6">
+                    <SidebarMenuButton
+                      asChild
+                      isActive={location.pathname === '/tenders'}
+                    >
+                      <Link to="/tenders">
+                        <FileCheck className="h-4 w-4" />
+                        <span>All Tenders</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem className="pl-6">
+                    <SidebarMenuButton
+                      asChild
+                      isActive={location.pathname === '/create-tender'}
+                    >
+                      <Link to="/create-tender">
+                        <FilePlus className="h-4 w-4" />
+                        <span>Create Tender</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
+              )}
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/submissions'}
+                >
+                  <Link to="/submissions">
+                    <Send className="h-5 w-5" />
+                    <span>Submissions</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/evaluations'}
+                >
+                  <Link to="/evaluations">
+                    <Award className="h-5 w-5" />
+                    <span>Evaluations</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/vendors'}
+                >
+                  <Link to="/vendors">
+                    <Users className="h-5 w-5" />
+                    <span>Vendors</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -69,19 +137,39 @@ export function AppSidebar() {
           <SidebarGroupLabel>Utilities</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {utilityMenuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={location.pathname === item.path}
-                  >
-                    <Link to={item.path}>
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/reports'}
+                >
+                  <Link to="/reports">
+                    <FileCheck className="h-5 w-5" />
+                    <span>Reports</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/settings'}
+                >
+                  <Link to="/settings">
+                    <Settings className="h-5 w-5" />
+                    <span>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/help'}
+                >
+                  <Link to="/help">
+                    <HelpCircle className="h-5 w-5" />
+                    <span>Help</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
