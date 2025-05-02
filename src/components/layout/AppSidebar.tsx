@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Sidebar,
@@ -13,15 +13,10 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { Home, FilePlus, Send, Users, Award, FileCheck, Settings, HelpCircle, LogOut, FileText, ChevronDown, ChevronRight } from 'lucide-react';
+import { Home, FilePlus, Send, Users, Award, FileCheck, Settings, HelpCircle, LogOut, FileText } from 'lucide-react';
 
 export function AppSidebar() {
   const location = useLocation();
-  const [tenderSubmenuOpen, setTenderSubmenuOpen] = useState(true);
-
-  const toggleTenderSubmenu = () => {
-    setTenderSubmenuOpen(!tenderSubmenuOpen);
-  };
 
   return (
     <Sidebar>
@@ -51,56 +46,26 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              {/* Tenders with submenu */}
               <SidebarMenuItem>
-                <div 
-                  className="flex items-center w-full px-3 py-2 rounded-md text-sidebar-foreground cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  onClick={toggleTenderSubmenu}
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname.includes('/tenders')}
                 >
-                  <FileText className="h-5 w-5 mr-2" />
-                  <span className="flex-1">Tenders</span>
-                  {tenderSubmenuOpen ? 
-                    <ChevronDown className="h-4 w-4" /> : 
-                    <ChevronRight className="h-4 w-4" />
-                  }
-                </div>
+                  <Link to="/tenders">
+                    <FileText className="h-5 w-5" />
+                    <span>Tenders</span>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
-
-              {tenderSubmenuOpen && (
-                <>
-                  <SidebarMenuItem className="pl-6">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={location.pathname === '/tenders'}
-                    >
-                      <Link to="/tenders">
-                        <FileCheck className="h-4 w-4" />
-                        <span>All Tenders</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem className="pl-6">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={location.pathname === '/create-tender'}
-                    >
-                      <Link to="/create-tender">
-                        <FilePlus className="h-4 w-4" />
-                        <span>Create Tender</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </>
-              )}
 
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={location.pathname === '/submissions'}
+                  isActive={location.pathname === '/proposals'}
                 >
-                  <Link to="/submissions">
+                  <Link to="/proposals">
                     <Send className="h-5 w-5" />
-                    <span>Submissions</span>
+                    <span>Proposals</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

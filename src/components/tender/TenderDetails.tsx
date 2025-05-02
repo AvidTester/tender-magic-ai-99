@@ -56,8 +56,8 @@ const tender = {
   ]
 };
 
-// Mock data for submissions with evaluation votes
-const submissions = [
+// Mock data for proposals with evaluation votes
+const proposals = [
   { 
     id: 'S-001', 
     vendorName: 'TechSolutions Inc.', 
@@ -104,7 +104,7 @@ export function TenderDetails() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [awardDialogOpen, setAwardDialogOpen] = useState(false);
-  const [selectedSubmission, setSelectedSubmission] = useState<typeof submissions[0] | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<typeof proposals[0] | null>(null);
   
   // Handle tender navigation
   const goBack = () => {
@@ -112,17 +112,17 @@ export function TenderDetails() {
   };
   
   // Open award dialog
-  const openAwardDialog = (submission: typeof submissions[0]) => {
-    setSelectedSubmission(submission);
+  const openAwardDialog = (proposal: typeof proposals[0]) => {
+    setSelectedProposal(proposal);
     setAwardDialogOpen(true);
   };
   
   // Award the tender
   const awardTender = () => {
-    if (selectedSubmission) {
+    if (selectedProposal) {
       toast({
         title: "Tender Awarded",
-        description: `Tender has been successfully awarded to ${selectedSubmission.vendorName}.`,
+        description: `Tender has been successfully awarded to ${selectedProposal.vendorName}.`,
       });
       setAwardDialogOpen(false);
       // In a real app, you would update the tender status and selected vendor
@@ -132,8 +132,8 @@ export function TenderDetails() {
   // Calculate completion percentage
   const completionPercentage = Math.round((tender.evaluatorsCompleted / tender.evaluatorsRequired) * 100);
   
-  // Sort submissions by evaluation votes (descending)
-  const rankedSubmissions = [...submissions].sort((a, b) => b.evaluationVotes - a.evaluationVotes);
+  // Sort proposals by evaluation votes (descending)
+  const rankedProposals = [...proposals].sort((a, b) => b.evaluationVotes - a.evaluationVotes);
 
   return (
     <div className="space-y-6">
@@ -147,7 +147,7 @@ export function TenderDetails() {
         <div>
           {tender.status === 'review' && tender.evaluatorsCompleted === tender.evaluatorsRequired && (
             <Button
-              onClick={() => openAwardDialog(rankedSubmissions[0])}
+              onClick={() => openAwardDialog(rankedProposals[0])}
               className="flex items-center gap-2"
             >
               <Award className="h-4 w-4" />
@@ -168,7 +168,7 @@ export function TenderDetails() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="proposals">Proposals</TabsTrigger>
           <TabsTrigger value="evaluators">Evaluators</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
         </TabsList>
@@ -251,25 +251,25 @@ export function TenderDetails() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Award className="h-5 w-5 text-amber-500" />
-                  Top Ranking Submission
+                  Top Ranking Proposal
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {rankedSubmissions.length > 0 ? (
+                {rankedProposals.length > 0 ? (
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <div className="text-xl font-medium">{rankedSubmissions[0].vendorName}</div>
-                        <div className="text-sm text-muted-foreground">Submission {rankedSubmissions[0].id}</div>
+                        <div className="text-xl font-medium">{rankedProposals[0].vendorName}</div>
+                        <div className="text-sm text-muted-foreground">Proposal {rankedProposals[0].id}</div>
                       </div>
-                      <div className="text-3xl font-bold text-blue-600">{rankedSubmissions[0].totalScore}%</div>
+                      <div className="text-3xl font-bold text-blue-600">{rankedProposals[0].totalScore}%</div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
                         <span>Evaluation Votes:</span>
                         <div className="flex items-center gap-1">
                           <ThumbsUp className="h-4 w-4 text-blue-500" />
-                          <span className="font-medium">{rankedSubmissions[0].evaluationVotes}</span>
+                          <span className="font-medium">{rankedProposals[0].evaluationVotes}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between text-sm">
@@ -284,14 +284,14 @@ export function TenderDetails() {
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span>Submission Date:</span>
-                        <span>{new Date(rankedSubmissions[0].submissionDate).toLocaleDateString()}</span>
+                        <span>{new Date(rankedProposals[0].submissionDate).toLocaleDateString()}</span>
                       </div>
                     </div>
                     
                     <div className="mt-4 pt-4 border-t">
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">AI Recommended:</span>
-                        {rankedSubmissions[0].isRecommended ? (
+                        {rankedProposals[0].isRecommended ? (
                           <Badge className="bg-green-100 text-green-800">Yes</Badge>
                         ) : (
                           <Badge variant="outline">No</Badge>
@@ -301,7 +301,7 @@ export function TenderDetails() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
-                    No submissions have been evaluated yet.
+                    No proposals have been evaluated yet.
                   </div>
                 )}
               </CardContent>
@@ -309,12 +309,12 @@ export function TenderDetails() {
           </div>
         </TabsContent>
         
-        <TabsContent value="submissions">
+        <TabsContent value="proposals">
           <Card>
             <CardHeader>
-              <CardTitle>Ranked Submissions</CardTitle>
+              <CardTitle>Ranked Proposals</CardTitle>
               <CardDescription>
-                Submissions are ranked based on evaluator votes and scores
+                Proposals are ranked based on evaluator votes and scores
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -332,21 +332,21 @@ export function TenderDetails() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {rankedSubmissions.map((submission, index) => (
-                    <TableRow key={submission.id}>
+                  {rankedProposals.map((proposal, index) => (
+                    <TableRow key={proposal.id}>
                       <TableCell className="font-medium">{index + 1}</TableCell>
-                      <TableCell>{submission.id}</TableCell>
-                      <TableCell>{submission.vendorName}</TableCell>
+                      <TableCell>{proposal.id}</TableCell>
+                      <TableCell>{proposal.vendorName}</TableCell>
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-1">
                           <ThumbsUp className="h-4 w-4 text-blue-500" />
-                          <span className="font-medium">{submission.evaluationVotes}</span>
+                          <span className="font-medium">{proposal.evaluationVotes}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-center">{submission.totalScore}%</TableCell>
-                      <TableCell>{new Date(submission.submissionDate).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-center">{proposal.totalScore}%</TableCell>
+                      <TableCell>{new Date(proposal.submissionDate).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        {submission.isRecommended ? (
+                        {proposal.isRecommended ? (
                           <Badge className="bg-green-100 text-green-800">Yes</Badge>
                         ) : (
                           <Badge variant="outline">No</Badge>
@@ -356,7 +356,7 @@ export function TenderDetails() {
                         <Button 
                           variant="secondary" 
                           size="sm" 
-                          onClick={() => openAwardDialog(submission)}
+                          onClick={() => openAwardDialog(proposal)}
                           disabled={tender.evaluatorsCompleted < tender.evaluatorsRequired}
                         >
                           <Award className="h-4 w-4 mr-1" />
@@ -368,9 +368,9 @@ export function TenderDetails() {
                 </TableBody>
               </Table>
               
-              {rankedSubmissions.length === 0 && (
+              {rankedProposals.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No submissions found for this tender.
+                  No proposals found for this tender.
                 </div>
               )}
             </CardContent>
@@ -382,7 +382,7 @@ export function TenderDetails() {
             <CardHeader>
               <CardTitle>Assigned Evaluators</CardTitle>
               <CardDescription>
-                Team members assigned to review and score submissions
+                Evaluation committee members assigned to review and score proposals
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -456,24 +456,24 @@ export function TenderDetails() {
           <DialogHeader>
             <DialogTitle>Award Tender</DialogTitle>
             <DialogDescription>
-              You are about to award the tender to the selected vendor. This action cannot be undone.
+              As a Procurement Officer, you are about to select the winning proposal for this tender. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           
-          {selectedSubmission && (
+          {selectedProposal && (
             <div className="py-4">
               <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg border">
                 <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
-                  {selectedSubmission.vendorName.substring(0, 2)}
+                  {selectedProposal.vendorName.substring(0, 2)}
                 </div>
                 <div>
-                  <div className="text-lg font-medium">{selectedSubmission.vendorName}</div>
+                  <div className="text-lg font-medium">{selectedProposal.vendorName}</div>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <ThumbsUp className="h-4 w-4" />
-                      <span>{selectedSubmission.evaluationVotes} votes</span>
+                      <span>{selectedProposal.evaluationVotes} votes</span>
                     </div>
-                    <div>Score: {selectedSubmission.totalScore}%</div>
+                    <div>Score: {selectedProposal.totalScore}%</div>
                   </div>
                 </div>
               </div>

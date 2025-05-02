@@ -16,12 +16,6 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { 
   Select,
@@ -31,7 +25,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Edit, MoreHorizontal, FilePlus, Search, Filter } from 'lucide-react';
+import { Eye, Edit, FilePlus, Search, Filter } from 'lucide-react';
 
 // Sample tenders data
 const tenders = [
@@ -129,7 +123,7 @@ export function TenderList() {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Tenders</CardTitle>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate('/create-tender')} className="flex items-center gap-1">
+          <Button onClick={() => navigate('/create-tender')} className="flex items-center gap-2">
             <FilePlus className="h-4 w-4" />
             <span>Create Tender</span>
           </Button>
@@ -171,7 +165,7 @@ export function TenderList() {
                 <TableHead>Title</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="text-center">Submissions</TableHead>
+                <TableHead className="text-center">Proposals</TableHead>
                 <TableHead>Evaluation Progress</TableHead>
                 <TableHead>Deadline</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -203,22 +197,26 @@ export function TenderList() {
                         day: 'numeric'
                       })}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => viewTender(tender.id)}>
-                            <Eye className="h-4 w-4 mr-2" /> View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => editTender(tender.id)} disabled={tender.status === 'closed' || tender.status === 'awarded'}>
-                            <Edit className="h-4 w-4 mr-2" /> Edit
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <TableCell className="text-right space-x-1">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => viewTender(tender.id)}
+                        className="inline-flex items-center"
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        View
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => editTender(tender.id)}
+                        disabled={tender.status === 'closed' || tender.status === 'awarded'}
+                        className="inline-flex items-center"
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))

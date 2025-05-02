@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Tenders from "./pages/Tenders";
 import TenderDetail from "./pages/TenderDetail";
 import CreateTender from "./pages/CreateTender";
-import Submissions from "./pages/Submissions";
+import Proposals from "./pages/Proposals";
 import Vendors from "./pages/Vendors";
 import Evaluations from "./pages/Evaluations";
 import Reports from "./pages/Reports";
@@ -29,7 +29,7 @@ const App = () => (
           <Route path="/tenders" element={<Tenders />} />
           <Route path="/tender/:tenderId" element={<TenderDetail />} />
           <Route path="/create-tender" element={<CreateTender />} />
-          <Route path="/submissions" element={<Submissions />} />
+          <Route path="/proposals" element={<Proposals />} />
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/evaluations" element={<Evaluations />} />
           <Route path="/reports" element={<Reports />} />
