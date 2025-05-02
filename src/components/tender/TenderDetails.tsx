@@ -59,7 +59,7 @@ const tender = {
 // Mock data for proposals with evaluation votes
 const proposals = [
   { 
-    id: 'S-001', 
+    id: 'P-001', 
     vendorName: 'TechSolutions Inc.', 
     submissionDate: '2025-04-20', 
     totalScore: 87,
@@ -72,7 +72,7 @@ const proposals = [
     ]
   },
   { 
-    id: 'S-002', 
+    id: 'P-002', 
     vendorName: 'Digital Innovators', 
     submissionDate: '2025-04-18', 
     totalScore: 72,
@@ -85,7 +85,7 @@ const proposals = [
     ]
   },
   { 
-    id: 'S-003', 
+    id: 'P-003', 
     vendorName: 'NextGen Systems', 
     submissionDate: '2025-04-22', 
     totalScore: 81,
@@ -456,7 +456,7 @@ export function TenderDetails() {
           <DialogHeader>
             <DialogTitle>Award Tender</DialogTitle>
             <DialogDescription>
-              As a Procurement Officer, you are about to select the winning proposal for this tender. This action cannot be undone.
+              As a Procurement Officer, you are selecting the winning proposal for this tender based on evaluator votes. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           
