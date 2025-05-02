@@ -1,15 +1,26 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { Header } from '@/components/layout/Header';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { useRole } from '@/context/RoleContext';
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+  const { role } = useRole();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!role) {
+      navigate('/select-role');
+    }
+  }, [role, navigate]);
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-slate-50">

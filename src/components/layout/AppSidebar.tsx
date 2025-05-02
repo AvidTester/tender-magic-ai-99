@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -14,9 +14,117 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 import { Home, FilePlus, Send, Users, Award, FileCheck, Settings, HelpCircle, LogOut, FileText } from 'lucide-react';
+import { useRole } from '@/context/RoleContext';
+import { Button } from '@/components/ui/button';
 
 export function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { role, setRole } = useRole();
+
+  const handleLogout = () => {
+    setRole(null);
+    navigate('/select-role');
+  };
+
+  // Define menu items based on user role
+  const getMenuItems = () => {
+    const allUsers = [
+      {
+        name: 'Dashboard',
+        path: '/dashboard',
+        icon: Home,
+      },
+      {
+        name: 'Tenders',
+        path: '/tenders',
+        icon: FileText,
+      },
+      {
+        name: 'Help',
+        path: '/help',
+        icon: HelpCircle,
+      },
+    ];
+
+    const procurementOfficerItems = [
+      ...allUsers,
+      {
+        name: 'Proposals',
+        path: '/proposals',
+        icon: Send,
+      },
+      {
+        name: 'Evaluations',
+        path: '/evaluations',
+        icon: Award,
+      },
+      {
+        name: 'Vendors',
+        path: '/vendors',
+        icon: Users,
+      },
+      {
+        name: 'Reports',
+        path: '/reports',
+        icon: FileCheck,
+      },
+      {
+        name: 'Settings',
+        path: '/settings',
+        icon: Settings,
+      },
+    ];
+    
+    const evaluatorItems = [
+      ...allUsers,
+      {
+        name: 'Proposals',
+        path: '/proposals',
+        icon: Send,
+      },
+      {
+        name: 'Evaluations',
+        path: '/evaluations',
+        icon: Award,
+      },
+    ];
+    
+    const vendorItems = [
+      ...allUsers,
+      {
+        name: 'My Proposals',
+        path: '/proposals',
+        icon: Send,
+      },
+    ];
+    
+    switch (role) {
+      case 'procurement-officer':
+        return procurementOfficerItems;
+      case 'evaluator':
+        return evaluatorItems;
+      case 'vendor':
+        return vendorItems;
+      default:
+        return allUsers;
+    }
+  };
+
+  const menuItems = getMenuItems();
+
+  const getRoleDisplayName = () => {
+    switch (role) {
+      case 'procurement-officer':
+        return 'Procurement Officer';
+      case 'evaluator':
+        return 'Evaluator';
+      case 'vendor':
+        return 'Vendor';
+      default:
+        return 'Guest';
+    }
+  };
 
   return (
     <Sidebar>
@@ -27,126 +135,66 @@ export function AppSidebar() {
           </div>
           <div className="font-semibold text-sidebar-foreground">Smart Procurement</div>
         </div>
+        {role && (
+          <div className="mt-2 px-2 py-1 bg-primary/10 rounded text-xs font-medium text-primary">
+            {getRoleDisplayName()}
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Procurement</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/'}
-                >
-                  <Link to="/">
-                    <Home className="h-5 w-5" />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname.includes('/tenders')}
-                >
-                  <Link to="/tenders">
-                    <FileText className="h-5 w-5" />
-                    <span>Tenders</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/proposals'}
-                >
-                  <Link to="/proposals">
-                    <Send className="h-5 w-5" />
-                    <span>Proposals</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/evaluations'}
-                >
-                  <Link to="/evaluations">
-                    <Award className="h-5 w-5" />
-                    <span>Evaluations</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/vendors'}
-                >
-                  <Link to="/vendors">
-                    <Users className="h-5 w-5" />
-                    <span>Vendors</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === item.path}
+                  >
+                    <Link to={item.path}>
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel>Utilities</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/reports'}
-                >
-                  <Link to="/reports">
-                    <FileCheck className="h-5 w-5" />
-                    <span>Reports</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/settings'}
-                >
-                  <Link to="/settings">
-                    <Settings className="h-5 w-5" />
-                    <span>Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/help'}
-                >
-                  <Link to="/help">
-                    <HelpCircle className="h-5 w-5" />
-                    <span>Help</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {role === 'procurement-officer' && (
+          <SidebarGroup className="mt-6">
+            <SidebarGroupLabel>Management</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === '/create-tender'}
+                  >
+                    <Link to="/create-tender">
+                      <FilePlus className="h-5 w-5" />
+                      <span>Create Tender</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <SidebarMenuButton asChild>
-          <button className="w-full flex items-center gap-2 text-sidebar-foreground hover:text-sidebar-accent-foreground">
-            <LogOut className="h-5 w-5" />
-            <span>Logout</span>
-          </button>
-        </SidebarMenuButton>
+        <Button 
+          variant="outline" 
+          className="w-full flex items-center gap-2" 
+          onClick={handleLogout}
+        >
+          <LogOut className="h-5 w-5" />
+          <span>Change Role</span>
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );
